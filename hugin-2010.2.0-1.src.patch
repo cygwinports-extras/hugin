@@ -1,0 +1,124 @@
+--- origsrc/hugin-2010.2.0/CMakeLists.txt	2010-09-28 17:06:42.000000000 -0500
++++ src/hugin-2010.2.0/CMakeLists.txt	2010-10-14 12:34:25.586993300 -0500
+@@ -185,8 +185,10 @@ FIND_PACKAGE(PNG REQUIRED)
+ INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
+ INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIR})
+ 
+-FIND_PACKAGE(OpenEXR REQUIRED)
++FIND_PACKAGE(OpenEXR)
++IF(OPENEXR_FOUND)
+ include_directories(${OPENEXR_INCLUDE_DIR})
++ENDIF(OPENEXR_FOUND)
+ 
+ FIND_PACKAGE(Exiv2 REQUIRED)
+ INCLUDE_DIRECTORIES(${EXIV2_INCLUDE_DIR})
+--- origsrc/hugin-2010.2.0/src/celeste/CMakeLists.txt	2010-09-28 17:06:44.000000000 -0500
++++ src/hugin-2010.2.0/src/celeste/CMakeLists.txt	2010-10-14 15:21:35.528456800 -0500
+@@ -56,11 +56,8 @@ IF (${HUGIN_SHARED_LIBS})
+ 	ADD_LIBRARY(celeste SHARED ${CELESTE_SRC})
+ 	TARGET_LINK_LIBRARIES(celeste huginbasewx ${common_libs})
+ 	set_target_properties(celeste PROPERTIES VERSION ${HUGIN_LIB_VERSION})
+-    IF(WIN32)
+-      install(TARGETS celeste RUNTIME DESTINATION ${BINDIR})
+-    ELSE(WIN32)
+-      install(TARGETS celeste DESTINATION ${LIBDIR})
+-    ENDIF(WIN32)
++    install(TARGETS celeste RUNTIME DESTINATION ${BINDIR}
++                            LIBRARY DESTINATION ${LIBDIR})
+ ELSE (${HUGIN_SHARED_LIBS})
+     # messages are quite obtrusive in windows cmakesetup.exe
+     IF (NOT WIN32)
+--- origsrc/hugin-2010.2.0/src/foreign/ANN/CMakeLists.txt	2010-09-28 17:06:43.000000000 -0500
++++ src/hugin-2010.2.0/src/foreign/ANN/CMakeLists.txt	2010-10-14 15:22:11.991878500 -0500
+@@ -12,11 +12,8 @@ SET(ANN_HEADERS ANN.h ANNperf.h ANNx.h k
+ IF (${HUGIN_SHARED_LIBS})
+   add_library(huginANN SHARED ${ANN_SRC} ${ANN_HEADERS})
+   set_target_properties(huginANN PROPERTIES VERSION ${HUGIN_LIB_VERSION})
+-  IF(WIN32)
+-    install(TARGETS huginANN RUNTIME DESTINATION ${BINDIR})
+-  ELSE(WIN32)
+-    install(TARGETS huginANN DESTINATION ${LIBDIR})
+-  ENDIF(WIN32)
++  install(TARGETS huginANN RUNTIME DESTINATION ${BINDIR}
++                           LIBRARY DESTINATION ${LIBDIR})
+ ELSE (${HUGIN_SHARED_LIBS})
+   add_library(huginANN STATIC ${ANN_SRC} ${ANN_HEADERS})
+ ENDIF (${HUGIN_SHARED_LIBS})
+--- origsrc/hugin-2010.2.0/src/foreign/vigra/vigra_impex/CMakeLists.txt	2010-09-28 17:06:43.000000000 -0500
++++ src/hugin-2010.2.0/src/foreign/vigra/vigra_impex/CMakeLists.txt	2010-10-14 15:22:34.735018600 -0500
+@@ -8,11 +8,8 @@ SET(VIGRA_IMPEX_HEADER bmp.hxx byteorder
+ IF (${HUGIN_SHARED_LIBS})
+   add_library(huginvigraimpex SHARED ${VIGRA_IMPEX_SRC} ${VIGRA_IMPEX_HEADER})
+   set_target_properties(huginvigraimpex PROPERTIES VERSION ${HUGIN_LIB_VERSION})
+-  IF(WIN32)
+-    install(TARGETS huginvigraimpex RUNTIME DESTINATION ${BINDIR})
+-  ELSE(WIN32)
+-    install(TARGETS huginvigraimpex DESTINATION ${LIBDIR})
+-  ENDIF(WIN32)
++  install(TARGETS huginvigraimpex RUNTIME DESTINATION ${BINDIR}
++                                  LIBRARY DESTINATION ${LIBDIR})
+ ELSE (${HUGIN_SHARED_LIBS})
+   add_library(huginvigraimpex STATIC ${VIGRA_IMPEX_SRC} ${VIGRA_IMPEX_HEADER})
+ ENDIF (${HUGIN_SHARED_LIBS})
+--- origsrc/hugin-2010.2.0/src/hugin1/base_wx/CMakeLists.txt	2010-09-28 17:06:44.000000000 -0500
++++ src/hugin-2010.2.0/src/hugin1/base_wx/CMakeLists.txt	2010-10-14 15:22:57.151254400 -0500
+@@ -11,11 +11,8 @@ IF (${HUGIN_SHARED_LIBS})
+   add_library(huginbasewx SHARED ${HUGIN_WX_BASE_SRC} ${HUGIN_WX_BASE_HEADER})
+   target_link_libraries(huginbasewx ${wxWidgets_LIBRARIES} huginbase ${common_libs})
+   set_target_properties(huginbasewx PROPERTIES VERSION ${HUGIN_LIB_VERSION})
+-  IF(WIN32)
+-    install(TARGETS huginbasewx RUNTIME DESTINATION ${BINDIR})
+-  ELSE(WIN32)
+-    install(TARGETS huginbasewx DESTINATION ${LIBDIR})
+-  ENDIF(WIN32)
++  install(TARGETS huginbasewx RUNTIME DESTINATION ${BINDIR}
++                              LIBRARY DESTINATION ${LIBDIR})
+ ELSE (${HUGIN_SHARED_LIBS})
+   add_library(huginbasewx STATIC ${HUGIN_WX_BASE_SRC} ${HUGIN_WX_BASE_HEADER})
+ ENDIF (${HUGIN_SHARED_LIBS})
+--- origsrc/hugin-2010.2.0/src/hugin_base/CMakeLists.txt	2010-09-28 17:06:43.000000000 -0500
++++ src/hugin-2010.2.0/src/hugin_base/CMakeLists.txt	2010-10-14 15:23:14.758430000 -0500
+@@ -131,11 +131,8 @@ IF (${HUGIN_SHARED_LIBS})
+   add_library(huginbase SHARED ${HUGIN_BASE_SRC} ${HUGIN_BASE_HEADER})
+   target_link_libraries(huginbase ${Boost_LIBRARIES})
+   set_target_properties(huginbase PROPERTIES VERSION ${HUGIN_LIB_VERSION})
+-  IF(WIN32)
+-    install(TARGETS huginbase RUNTIME DESTINATION ${BINDIR})
+-  ELSE(WIN32)
+-    install(TARGETS huginbase DESTINATION ${LIBDIR})
+-  ENDIF(WIN32)
++  install(TARGETS huginbase RUNTIME DESTINATION ${BINDIR}
++                            LIBRARY DESTINATION ${LIBDIR})
+ ELSE (${HUGIN_SHARED_LIBS})
+   add_library(huginbase STATIC ${HUGIN_BASE_SRC} ${HUGIN_BASE_HEADER})
+ ENDIF (${HUGIN_SHARED_LIBS})
+--- origsrc/hugin-2010.2.0/src/hugin_base/hugin_utils/platform.cpp	2010-09-28 17:06:43.000000000 -0500
++++ src/hugin-2010.2.0/src/hugin_base/hugin_utils/platform.cpp	2010-10-14 12:34:25.590993600 -0500
+@@ -29,8 +29,10 @@
+ #include "vigra/windows.h"
+ #else
+ #include <unistd.h>
++#ifdef __linux__
+ #include <sys/sysctl.h>
+ #endif
++#endif
+ 
+ namespace hugin_utils {
+     
+--- origsrc/hugin-2010.2.0/src/tools/CMakeLists.txt	2010-09-28 17:06:44.000000000 -0500
++++ src/hugin-2010.2.0/src/tools/CMakeLists.txt	2010-10-14 12:34:25.595993800 -0500
+@@ -35,10 +35,13 @@ target_link_libraries(pano_trafo ${commo
+ add_executable(pano_modify pano_modify.cpp)
+ target_link_libraries(pano_modify ${common_libs} )
+ 
++if(OPENEXR_FOUND)
+ add_executable(hugin_hdrmerge hugin_hdrmerge.cpp ../deghosting/deghosting.cpp ../deghosting/deghosting.h ../deghosting/khan.h ../deghosting/support.h ../deghosting/algtinyvector.h)
+ target_link_libraries(hugin_hdrmerge ${common_libs} ${image_libs} )
++install(TARGETS hugin_hdrmerge DESTINATION ${BINDIR})
++endif(OPENEXR_FOUND)
+ 
+ install(TARGETS nona vig_optimize autooptimiser fulla align_image_stack
+-        tca_correct pto2mk cpclean hugin_hdrmerge pano_trafo pano_modify pto_merge
++        tca_correct pto2mk cpclean pano_trafo pano_modify pto_merge
+         DESTINATION ${BINDIR})
+ 

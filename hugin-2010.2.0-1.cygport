@@ -1,0 +1,7 @@
+inherit cmake
+
+DESCRIPTION="Panorama photo stitcher"
+HOMEPAGE="http://hugin.sourceforge.net/"
+SRC_URI="mirror://sourceforge/hugin/${P}.tar.gz"
+
+#CYGCMAKE_ARGS="-DHUGIN_SHARED=NO"
